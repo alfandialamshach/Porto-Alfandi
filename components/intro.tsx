@@ -70,21 +70,21 @@ export default function Intro() {
           Alfandi Alamshach.
         </span>
       </motion.h1>
-   <motion.h4
-  className="mb-10 px-4 text-lg font-normal text-gray-700 dark:text-white/80 !leading-[1.6] sm:text-xl max-w-[42rem] mx-auto"
-  initial={{ opacity: 0, y: 100 }}
-  animate={{ opacity: 1, y: 0 }}
->
-  Lulusan Teknologi Informasi yang berfokus pada{" "}
-  <span className="font-semibold text-[#0284C7] dark:text-sky-300">
-    full-stack development, networking, dan cybersecurity
-  </span>
-  . Saya tertarik membangun solusi digital yang{" "}
-  <span className="font-semibold text-[#0284C7] dark:text-sky-300">
-    aman, andal, dan berorientasi pada kebutuhan pengguna
-  </span>
-  , serta terus mengembangkan keterampilan di bidang teknologi.
-</motion.h4>
+      <motion.p
+        className="mb-10 px-4 text-lg font-normal text-gray-700 dark:text-white/80 !leading-[1.6] sm:text-xl max-w-[42rem] mx-auto"
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        Praktisi Teknologi Informasi yang berfokus pada{" "}
+        <span className="font-semibold text-[#0284C7] dark:text-sky-300">
+          full-stack development, networking, dan cybersecurity
+        </span>
+        . Saya tertarik membangun solusi digital yang{" "}
+        <span className="font-semibold text-[#0284C7] dark:text-sky-300">
+          aman, andal, dan berorientasi pada kebutuhan pengguna
+        </span>
+        , serta terus mengembangkan keterampilan di bidang teknologi.
+      </motion.p>
 
       <motion.div
         className="flex flex-col sm:flex-row items-center justify-center gap-3 px-4 text-lg font-medium"

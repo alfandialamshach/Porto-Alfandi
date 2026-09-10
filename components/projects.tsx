@@ -218,18 +218,18 @@ const ProjectSection: React.FC = () => {
               >
                 <span className="text-xl">&times;</span>
               </button>
-              <h2 className="text-xl font-semibold mb-2 dark:text-white">
+              <h3 className="text-xl font-semibold mb-2 dark:text-white">
                 {selectedProject.title}
-              </h2>
+              </h3>
               <div className=" relative overflow-y-auto">
                 <p className="modal-content text-gray-600 dark:text-gray-200 mb-4 text-justify max-h-60vh">
                   {selectedProject.description}
                 </p>
               </div>
               <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-2 dark:text-white">
+                <h4 className="text-lg font-semibold mb-2 dark:text-white">
                   Features I Worked On:
-                </h3>
+                </h4>
                 <ul className="list-disc list-inside">
                   {selectedProject.features.map((feature, index) => (
                     <li
@@ -241,9 +241,9 @@ const ProjectSection: React.FC = () => {
                   ))}
                 </ul>
               </div>
-              <h4 className="text-lg font-semibold mb-2 dark:text-white">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
                 Click the image to enlarge
-              </h4>
+              </p>
               <div className="flex space-x-4 flex-wrap mb-4">
                 {selectedProject.screenshots.map((screenshot, index) => (
                   <ModalScreenshotImage
