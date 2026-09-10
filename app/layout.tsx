@@ -12,6 +12,8 @@ import type { Metadata, Viewport } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 const siteUrl = "https://alamshach.site";
+const descriptionText =
+  "Alfandi Alamshach adalah profesional Teknologi Informasi yang berfokus pada full-stack development, networking, dan cybersecurity untuk solusi digital andal.";
 
 export const viewport: Viewport = {
   themeColor: "#090d16",
@@ -24,8 +26,7 @@ export const metadata: Metadata = {
     default: "Alfandi Alamshach | Information Technology",
     template: "%s | Alfandi Alamshach",
   },
-  description:
-    "Alfandi Alamshach adalah profesional di bidang Teknologi Informasi dengan fokus pada full-stack development, networking, dan cybersecurity. Berpengalaman mengembangkan aplikasi web dan mobile, API, database, serta solusi teknologi yang aman dan andal.",
+  description: descriptionText,
   authors: [{ name: "Alfandi Alamshach", url: siteUrl }],
   creator: "Alfandi Alamshach",
   publisher: "Alfandi Alamshach",
@@ -53,40 +54,32 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Alfandi Alamshach | Information Technology",
-    description:
-      "Alfandi Alamshach adalah profesional di bidang Teknologi Informasi dengan fokus pada full-stack development, networking, dan cybersecurity. Berpengalaman mengembangkan aplikasi web dan mobile, API, database, serta solusi teknologi yang aman dan andal.",
+    description: descriptionText,
     url: siteUrl,
     siteName: "Alfandi Alamshach",
     locale: "id_ID",
     type: "website",
     images: [
       {
+        url: `${siteUrl}/og-image.jpeg`,
+        width: 800,
+        height: 800,
+        alt: "Alfandi Alamshach - Information Technology",
+      },
+      {
         url: `${siteUrl}/images/profile.jpeg`,
         width: 800,
         height: 800,
-        alt: "Alfandi Alamshach - Information Technology Professional",
-      },
-      {
-        url: `${siteUrl}/images/project/dompet-warga/1.png`,
-        width: 1200,
-        height: 630,
-        alt: "Portofolio Dompet Warga - Alfandi Alamshach",
-      },
-      {
-        url: `${siteUrl}/images/project/smart-village/1.png`,
-        width: 1200,
-        height: 630,
-        alt: "Portofolio Smart Village Klapagading - Alfandi Alamshach",
+        alt: "Alfandi Alamshach Profile",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Alfandi Alamshach | Information Technology",
-    description:
-      "Alfandi Alamshach adalah profesional di bidang Teknologi Informasi dengan fokus pada full-stack development, networking, dan cybersecurity.",
+    description: descriptionText,
     creator: "@alamshach_",
-    images: [`${siteUrl}/images/profile.jpeg`],
+    images: [`${siteUrl}/og-image.jpeg`],
   },
   robots: {
     index: true,
