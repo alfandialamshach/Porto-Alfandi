@@ -4,8 +4,10 @@ import { Inter } from "next/font/google";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import Footer from "@/components/footer";
 import ThemeSwitch from "@/components/theme-switch";
+import ScrollProgress from "@/components/scroll-progress";
+import BackToTop from "@/components/back-to-top";
+import MotionProvider from "@/components/motion-provider";
 import ThemeContextProvider from "@/context/theme-context";
-import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
@@ -14,6 +16,30 @@ const inter = Inter({ subsets: ["latin"] });
 const siteUrl = "https://alamshach.site";
 const descriptionText =
   "Alfandi Alamshach adalah profesional Teknologi Informasi yang berfokus pada full-stack development, networking, dan cybersecurity untuk solusi digital andal.";
+
+const personJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Alfandi Alamshach",
+  url: siteUrl,
+  image: `${siteUrl}/images/profile.jpeg`,
+  jobTitle: "Information Technology",
+  description: descriptionText,
+  knowsAbout: [
+    "Full-Stack Development",
+    "Networking",
+    "Cybersecurity",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+  ],
+  sameAs: [
+    "https://www.linkedin.com/in/alfandialamshach/",
+    "https://github.com/alfandialamshach",
+    "https://www.instagram.com/alamshach_/",
+  ],
+}).replace(/</g, "\\u003c");
 
 export const viewport: Viewport = {
   themeColor: "#090d16",
@@ -61,16 +87,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${siteUrl}/og-image.jpeg`,
-        width: 800,
-        height: 800,
+        url: `${siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
         alt: "Alfandi Alamshach - Information Technology",
-      },
-      {
-        url: `${siteUrl}/images/profile.jpeg`,
-        width: 800,
-        height: 800,
-        alt: "Alfandi Alamshach Profile",
       },
     ],
   },
@@ -79,7 +99,7 @@ export const metadata: Metadata = {
     title: "Alfandi Alamshach | Information Technology",
     description: descriptionText,
     creator: "@alamshach_",
-    images: [`${siteUrl}/og-image.jpeg`],
+    images: [`${siteUrl}/og-image.png`],
   },
   robots: {
     index: true,
@@ -108,16 +128,23 @@ export default function RootLayout({
         <div className="bg-[#38BDF8]/40 absolute top-[-6rem] -z-10 right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#0284C7]/30"></div>
         <div className="bg-[#6CABDD]/35 absolute top-[-1rem] -z-10 left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem] dark:bg-[#38BDF8]/20"></div>
 
+        <MotionProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: personJsonLd }}
+        />
+        <ScrollProgress />
         <ThemeContextProvider>
           <ActiveSectionContextProvider>
             <Header />
             {children}
             <Footer />
 
-            <Toaster position="top-right" />
             <ThemeSwitch />
+            <BackToTop />
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
+        </MotionProvider>
         <Analytics />
         <SpeedInsights />
       </body>

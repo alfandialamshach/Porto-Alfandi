@@ -1,13 +1,16 @@
 "use client";
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
 import { projectsData } from "@/lib/data";
 import FloatingShape from "./floating-shape";
 import { useSectionInView } from "@/lib/hooks";
 import { useInView } from "react-intersection-observer";
 import { FaGithub, FaLink, FaArrowDown } from "react-icons/fa";
 import { BiLinkExternal } from "react-icons/bi";
+import { BsArrowRight } from "react-icons/bs";
 import SectionHeading from "./section-heading";
+import { onSpotlightMove } from "@/lib/spotlight";
 
 interface Project {
   title: string;
@@ -21,57 +24,29 @@ interface Project {
   githubUrl?: string;
 }
 
-const ProjectCardImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
-  const [imgError, setImgError] = useState(false);
-
-  if (imgError) {
-    return (
-      <div className="w-full h-48 bg-slate-100 dark:bg-slate-800/80 border-b border-gray-200 dark:border-sky-500/20 flex flex-col items-center justify-center p-4 text-center">
-        <span className="text-2xl mb-1">📷</span>
-        <span className="text-xs text-gray-500 dark:text-sky-300 font-medium">
-          File <code className="text-sky-400 font-mono">1.png</code> siap ditambahkan di:
-        </span>
-        <span className="text-[10px] text-gray-400 dark:text-slate-400 font-mono mt-1">
-          public/{src}
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <img
+const ProjectCardImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => (
+  <div className="relative w-full h-48">
+    <Image
       src={src}
       alt={alt}
-      className="w-full h-48 object-cover"
-      onError={() => setImgError(true)}
+      fill
+      sizes="(min-width: 768px) 50vw, 100vw"
+      className="object-cover"
     />
-  );
-};
+  </div>
+);
 
-const ModalScreenshotImage: React.FC<{ src: string; alt: string; onClick: () => void }> = ({ src, alt, onClick }) => {
-  const [imgError, setImgError] = useState(false);
-
-  if (imgError) {
-    return (
-      <div className="w-32 h-32 rounded-md bg-slate-100 dark:bg-slate-800/80 border border-gray-200 dark:border-sky-500/30 flex flex-col items-center justify-center p-2 text-center mb-4">
-        <span className="text-lg mb-1">🖼️</span>
-        <span className="text-[10px] text-gray-500 dark:text-sky-300 font-mono">
-          {src.split('/').pop()}
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <img
+const ModalScreenshotImage: React.FC<{ src: string; alt: string; onClick: () => void }> = ({ src, alt, onClick }) => (
+  <button type="button" onClick={onClick} className="mb-4" aria-label={`Perbesar ${alt}`}>
+    <Image
       src={src}
       alt={alt}
-      className="w-32 h-32 object-cover rounded-md cursor-pointer mb-4 hover:opacity-80 transition"
-      onClick={onClick}
-      onError={() => setImgError(true)}
+      width={128}
+      height={128}
+      className="w-32 h-32 object-cover rounded-md hover:opacity-80 transition"
     />
-  );
-};
+  </button>
+);
 
 const ProjectSection: React.FC = () => {
   const { ref } = useSectionInView("Projects", 0.5);
@@ -102,6 +77,16 @@ const ProjectSection: React.FC = () => {
 
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (zoomedImage) setZoomedImage(null);
+      else if (selectedProject) handleCloseModal();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoomedImage, selectedProject]);
+
   const handleScreenshotClick = (screenshot: string) => {
     setZoomedImage(screenshot);
   };
@@ -131,13 +116,14 @@ const ProjectSection: React.FC = () => {
             <motion.div
               key={index}
               onClick={() => handleProjectClick(project)}
+              onMouseMove={onSpotlightMove}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: inView ? 1 : 0, scale: inView ? 1 : 0.9 }}
               transition={{ duration: 0.6, delay: 0.1 * index }}
               exit={{ opacity: 0, scale: 0.9 }}
               whileHover={{ scale: 1.05 }}
               style={{ cursor: "pointer" }}
-              className="bg-white dark:bg-[#0f172a]/80 text-black border-white dark:border-sky-500/20 border-solid border-4 rounded-xl shadow-lg dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] dark:hover:border-sky-400/50 dark:hover:shadow-[0_0_25px_rgba(56,189,248,0.25)] overflow-hidden transition-all duration-300 backdrop-blur-sm"
+              className="spotlight bg-white dark:bg-[#0f172a]/80 text-black border-white dark:border-sky-500/20 border-solid border-4 rounded-xl shadow-lg dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] dark:hover:border-sky-400/50 dark:hover:shadow-[0_0_25px_rgba(56,189,248,0.25)] overflow-hidden transition-all duration-300 backdrop-blur-sm"
             >
               <ProjectCardImage
                 src={project.image}
@@ -147,9 +133,19 @@ const ProjectSection: React.FC = () => {
                 <h3 className="text-xl font-semibold mb-2 dark:text-slate-100">
                   {project.title}
                 </h3>
-                <p className="text-gray-600 dark:text-slate-300 mb-4 text-justify">
+                <p className="text-gray-600 dark:text-slate-300 mb-3 text-left line-clamp-3">
                   {project.description}
                 </p>
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {project.languages.map((language) => (
+                    <span
+                      key={language}
+                      className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-200"
+                    >
+                      {language}
+                    </span>
+                  ))}
+                </div>
                 <div className="flex justify-between items-end">
                   <div className="flex space-x-2">
                     {project.tech.map((tech, techIndex) => (
@@ -169,6 +165,8 @@ const ProjectSection: React.FC = () => {
                         href={project.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`Demo ${project.title}`}
+                        onClick={(e) => e.stopPropagation()}
                         className={`text-gray-600 dark:text-sky-300 hover:underline text-xl`}
                       >
                         <BiLinkExternal />
@@ -179,6 +177,8 @@ const ProjectSection: React.FC = () => {
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`GitHub ${project.title}`}
+                        onClick={(e) => e.stopPropagation()}
                         className={`text-gray-600 dark:text-sky-300 dark:hover:text-white hover:text-gray-700 text-xl`}
                       >
                         <FaGithub />
@@ -186,6 +186,13 @@ const ProjectSection: React.FC = () => {
                     )}
                   </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleProjectClick(project)}
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-600 hover:text-sky-500 dark:text-sky-300 dark:hover:text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-400 outline-none rounded"
+                >
+                  Lihat detail <BsArrowRight />
+                </button>
               </div>
             </motion.div>
           ))}
@@ -194,26 +201,50 @@ const ProjectSection: React.FC = () => {
           <div className="flex justify-center mt-10">
             <button
               onClick={toggleShowAllProjects}
-              className="group flex items-center justify-center gap-2 h-[3rem] w-[9rem] bg-[#6CABDD] text-white hover:bg-[#589dcf] dark:bg-[#38BDF8] dark:hover:bg-[#0284c7] dark:text-gray-950 rounded-full outline-none transition-all focus:scale-110 hover:scale-105 active:scale-95 shadow-lg shadow-[#6CABDD]/30"
+              className="group flex items-center justify-center gap-2 h-[3rem] px-6 bg-[#6CABDD] text-white hover:bg-[#589dcf] dark:bg-[#38BDF8] dark:hover:bg-[#0284c7] dark:text-gray-950 rounded-full outline-none transition-all focus:scale-110 hover:scale-105 active:scale-95 shadow-lg shadow-[#6CABDD]/30"
             >
-              Load More
+              Muat Lebih Banyak
               <FaArrowDown className="text-xs opacity-70 transition-all" />{" "}
             </button>
           </div>
         )}
+        <div className="flex justify-center mt-6">
+          <a
+            href="https://github.com/alfandialamshach"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-sky-500 dark:text-slate-300 dark:hover:text-sky-300 transition"
+          >
+            <FaGithub /> Lihat proyek lainnya di GitHub <BsArrowRight />
+          </a>
+        </div>
       </div>
       {/* Modal for detailed description */}
+      <AnimatePresence>
       {selectedProject && (
-        <div className="modal-overlay flex items-center justify-center">
+        <div
+          key="project-modal"
+          className="modal-overlay flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label={selectedProject.title}
+        >
           <motion.div
             className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            {" "}
-            <div className="bg-white dark:bg-[#0f172a] dark:border dark:border-sky-500/30 p-8 max-w-[900px] w-full mx-4 my-8 rounded-xl shadow-2xl relative overflow-y-scroll max-h-[80vh]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white dark:bg-[#0f172a] dark:border dark:border-sky-500/30 p-8 max-w-[900px] w-full mx-4 my-8 rounded-xl shadow-2xl relative overflow-y-scroll max-h-[80vh]"
+            >
               <button
                 onClick={handleCloseModal}
+                aria-label="Tutup"
                 className="absolute top-4 right-4 text-gray-600 dark:text-gray-200 hover:text-gray-700"
               >
                 <span className="text-xl">&times;</span>
@@ -228,21 +259,24 @@ const ProjectSection: React.FC = () => {
               </div>
               <div className="mb-4">
                 <h4 className="text-lg font-semibold mb-2 dark:text-white">
-                  Features I Worked On:
+                  Fitur yang Saya Kerjakan:
                 </h4>
                 <ul className="list-disc list-inside">
                   {selectedProject.features.map((feature, index) => (
-                    <li
+                    <motion.li
                       key={index}
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 + index * 0.08 }}
                       className="text-gray-600 dark:text-gray-200"
                     >
                       {feature}
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               </div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                Click the image to enlarge
+                Klik gambar untuk memperbesar
               </p>
               <div className="flex space-x-4 flex-wrap mb-4">
                 {selectedProject.screenshots.map((screenshot, index) => (
@@ -255,7 +289,7 @@ const ProjectSection: React.FC = () => {
                 ))}
               </div>
               <h4 className="text-lg font-semibold mb-2 dark:text-white">
-                Language and Tools
+                Bahasa dan Tools
               </h4>
               <div className="flex justify-between items-end">
                 <div className="flex space-x-2">
@@ -269,35 +303,54 @@ const ProjectSection: React.FC = () => {
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       )}
+      </AnimatePresence>
+      <AnimatePresence>
       {zoomedImage && (
-        <div className="image-modal-overlay flex items-center justify-center">
+        <div
+          key="zoom-modal"
+          className="image-modal-overlay flex items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Screenshot diperbesar"
+        >
           <motion.div
             className="fixed inset-0 flex items-center justify-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <div className="bg-white dark:bg-[#0f172a] dark:border dark:border-sky-500/30 p-8 max-w-[1000px] w-full mx-4 my-8 rounded-xl shadow-2xl relative">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white dark:bg-[#0f172a] dark:border dark:border-sky-500/30 p-8 max-w-[1000px] w-full mx-4 my-8 rounded-xl shadow-2xl relative"
+            >
               <button
                 onClick={handleCloseZoomedImage}
+                aria-label="Tutup"
                 className="absolute top-4 right-4 text-gray-600 dark:text-gray-200 hover:text-gray-700"
               >
                 <span className="text-xl">&times;</span>
               </button>
-              <div className="w-full h-[600px] mb-4 overflow-hidden">
-                <img
+              <div className="relative w-full h-[600px] mb-4 overflow-hidden">
+                <Image
                   src={zoomedImage}
-                  alt="Zoomed Screenshot"
-                  className="max-w-full max-h-full object-contain"
+                  alt="Screenshot diperbesar"
+                  fill
+                  sizes="1000px"
+                  className="object-contain"
                 />
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       )}
+      </AnimatePresence>
     </motion.section>
   );
 };

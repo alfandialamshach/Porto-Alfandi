@@ -58,11 +58,11 @@ export const projectsData = [
     description:
       "Aplikasi mobile yang dikembangkan untuk membantu digitalisasi pengelolaan tabungan warga dan kas RT. Sistem memungkinkan pengurus melakukan pencatatan tabungan berdasarkan rumah, melihat riwayat transaksi dan saldo, serta menggunakan QR Code sebagai identitas setiap rumah.",
     screenshots: [
-      "images/project/dompet-warga/1.png",
-      "images/project/dompet-warga/2.png",
-      "images/project/dompet-warga/3.png",
+      "/images/project/dompet-warga/1.png",
+      "/images/project/dompet-warga/2.png",
+      "/images/project/dompet-warga/3.png",
     ],
-    image: "images/project/dompet-warga/1.png",
+    image: "/images/project/dompet-warga/1.png",
     tech: [
       "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
       "/images/shapes/javascript.svg",
@@ -82,11 +82,11 @@ export const projectsData = [
     description:
       "Website Human Resources Information System yang dikembangkan selama pengalaman sebagai Web Developer di PT Lintas Data Prima. Sistem dikembangkan untuk mendukung pengelolaan data dan proses administrasi sumber daya manusia secara digital.",
     screenshots: [
-      "images/project/hris/1.png",
-      "images/project/hris/2.png",
-      "images/project/hris/3.png",
+      "/images/project/hris/1.png",
+      "/images/project/hris/2.png",
+      "/images/project/hris/3.png",
     ],
-    image: "images/project/hris/1.png",
+    image: "/images/project/hris/1.png",
     tech: [
       "https://upload.wikimedia.org/wikipedia/commons/9/9a/Laravel.svg",
       "/images/shapes/javascript.svg",
@@ -106,11 +106,11 @@ export const projectsData = [
     description:
       "Sistem informasi desa yang dikembangkan untuk mendukung digitalisasi informasi dan layanan Desa Klapagading. Proyek ini berfokus pada pengembangan sistem yang dapat membantu masyarakat dan perangkat desa dalam mengakses serta mengelola informasi secara digital.",
     screenshots: [
-      "images/project/smart-village/1.png",
-      "images/project/smart-village/2.png",
-      "images/project/smart-village/3.png",
+      "/images/project/smart-village/1.png",
+      "/images/project/smart-village/2.png",
+      "/images/project/smart-village/3.png",
     ],
-    image: "images/project/smart-village/1.png",
+    image: "/images/project/smart-village/1.png",
     tech: [
       "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
       "/images/shapes/javascript.svg",
@@ -130,11 +130,11 @@ export const projectsData = [
     description:
       "Sistem informasi klinik yang dikembangkan sebagai technical assignment untuk mensimulasikan proses pengelolaan data dan layanan klinik secara digital. Proyek ini mencakup pengembangan backend dan frontend untuk mendukung kebutuhan sistem informasi klinik.",
     screenshots: [
-      "images/project/mini-clinic/1.png",
-      "images/project/mini-clinic/2.png",
-      "images/project/mini-clinic/3.png",
+      "/images/project/mini-clinic/1.png",
+      "/images/project/mini-clinic/2.png",
+      "/images/project/mini-clinic/3.png",
     ],
-    image: "images/project/mini-clinic/1.png",
+    image: "/images/project/mini-clinic/1.png",
     tech: [
       "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg",
       "/images/shapes/javascript.svg",
@@ -211,4 +211,13 @@ export const skilss = [
     imgUrl:
       "https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg",
   },
+] as const;
+
+export const skillGroups = [
+  {
+    title: "Frontend & Mobile",
+    names: ["React Native", "React", "Next.js", "TypeScript", "JavaScript"],
+  },
+  { title: "Backend & Database", names: ["Node.js", "Express.js", "MySQL"] },
+  { title: "Network & Sistem", names: ["Linux", "Cisco"] },
 ] as const;

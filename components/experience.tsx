@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import SectionHeading from "./section-heading";
 import {
   VerticalTimeline,
@@ -53,11 +54,18 @@ export default function Experience() {
                 fontSize: "1.5rem",
               }}
             >
-              <h3 className="font-semibold capitalize">{item.title}</h3>
-              <p className="font-normal !mt-0">{item.location}</p>
-              <p className="!mt-1 text-justify !font-normal text-gray-700 dark:text-white/75">
-                {item.description}
-              </p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <h3 className="font-semibold capitalize">{item.title}</h3>
+                <p className="font-normal !mt-0">{item.location}</p>
+                <p className="!mt-1 text-justify !font-normal text-gray-700 dark:text-white/75">
+                  {item.description}
+                </p>
+              </motion.div>
             </VerticalTimelineElement>
           </React.Fragment>
         ))}

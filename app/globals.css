@@ -85,3 +85,56 @@ html.dark {
   height: 100%;
   z-index: 1500; /* Memastikan z-index lebih tinggi dari elemen lain */
 }
+
+/* Cursor-following glow for cards (desktop hover only) */
+.spotlight {
+  position: relative;
+}
+@media (hover: hover) {
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(
+      280px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(56, 189, 248, 0.16),
+      transparent 65%
+    );
+  }
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Slow ambient motion; skipped when the user prefers reduced motion */
+@keyframes ring-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.22);
+    opacity: 0;
+  }
+}
+@keyframes gradient-shift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ring-pulse {
+    animation: ring-pulse 3s ease-out infinite;
+  }
+  .gradient-shift {
+    animation: gradient-shift 6s ease-in-out infinite alternate;
+  }
+}
